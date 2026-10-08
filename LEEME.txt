@@ -1,0 +1,28 @@
+TECHNICAL ENGLISH PRACTICE — Unidad 1, Unidad 2 y Unidad 4
+==========================================================
+CONTENIDO
+- 3 secciones: Unit 1 (Software Engineering), Unit 2 (Programming Languages), Unit 4 (Robotics).
+- Cada unidad tiene 3 niveles de 20 preguntas (todo en inglés):
+    Level 1: Multiple Choice (4 opciones, el orden se mezcla)
+    Level 2: True or False
+    Level 3: Matching (relacionar término con su descripción, 4 grupos de 5)
+- Puedes entrar a cualquier nivel o pregunta en cualquier momento.
+- Botón (i): muestra el documento, el subtítulo/sección y la página donde está la respuesta.
+- Botón EN / ES (arriba a la derecha): cambia TODA la app entre inglés y español
+  (preguntas, opciones, términos, descripciones, secciones y botones).
+  En español también se muestra la pregunta original en inglés para que aprendas.
+  El idioma elegido se recuerda. En computadora también puedes presionar la tecla L.
+- El progreso se guarda en el navegador de ese dispositivo.
+- En computadora: teclas A-D o 1-4 para responder, T/F para verdadero/falso,
+  flechas para moverte, i para ver la información.
+
+PARA EDITAR PREGUNTAS
+   js/data/unit1.js, unit2.js, unit4.js
+   En opción múltiple, "a" es el índice de la respuesta correcta (la app mezcla las opciones).
+   "r": ["página", "sección"] es lo que muestra el botón (i).
+   Las traducciones al español están en js/data/unit1.es.js, unit2.es.js y unit4.es.js,
+   en el MISMO orden que las preguntas en inglés.
+
+NOTA: los números de página de la Unidad 2 son los que están impresos en el documento.
+En las Unidades 1 y 4 (que no tienen números impresos) la página puede variar en ±1
+según el programa con el que abras el Word.

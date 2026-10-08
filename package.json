@@ -1,0 +1,8 @@
+{
+  "name": "technical-english-practice",
+  "version": "1.0.0",
+  "description": "Quiz app for Units 1, 2 and 4 (Software Engineering, Programming Languages, Robotics)",
+  "scripts": { "start": "node server.js" },
+  "license": "UNLICENSED",
+  "private": true
+}

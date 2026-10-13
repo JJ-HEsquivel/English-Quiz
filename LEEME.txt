@@ -1,5 +1,19 @@
 TECHNICAL ENGLISH PRACTICE — Unidad 1, Unidad 2 y Unidad 4
 ==========================================================
+
+CÓMO USARLO
+1) Descomprime el .zip.
+2) Abre el archivo  index.html  (doble clic). Se abre en el navegador y ya funciona.
+   No necesita internet ni instalar nada.
+
+OPCIONAL (para usarlo en el celular desde la misma red Wi-Fi)
+   Si tienes Node.js instalado, en la carpeta raíz ejecuta:
+       node server.js        (o  npm start)
+   Luego abre  http://localhost:8080  en la computadora, o
+   http://IP-DE-TU-PC:8080  en el celular.
+   También puedes subir la carpeta tal cual a cualquier hosting estático
+   (GitHub Pages, Netlify, etc.).
+
 CONTENIDO
 - 3 secciones: Unit 1 (Software Engineering), Unit 2 (Programming Languages), Unit 4 (Robotics).
 - Cada unidad tiene 3 niveles de 20 preguntas (todo en inglés):
@@ -12,9 +26,20 @@ CONTENIDO
   (preguntas, opciones, términos, descripciones, secciones y botones).
   En español también se muestra la pregunta original en inglés para que aprendas.
   El idioma elegido se recuerda. En computadora también puedes presionar la tecla L.
+- DOCUMENTOS (dentro de cada unidad, debajo de los niveles):
+    * Lector dinámico: cada página se ve igual que el PDF, empieza en inglés y tiene
+      el botón "Cambiar esta página al español" / "Volver al inglés". Solo se traduce
+      la página que estás viendo. Cambia de página con los botones, deslizando el dedo
+      o con las flechas del teclado (tecla T = traducir la página).
+    * Documento en inglés: el original completo + botón para descargar el PDF.
+    * Documento en español: la traducción completa + botón para descargar el PDF.
 - El progreso se guarda en el navegador de ese dispositivo.
 - En computadora: teclas A-D o 1-4 para responder, T/F para verdadero/falso,
   flechas para moverte, i para ver la información.
+
+CARPETA docs/
+   docs/u1, docs/u2, docs/u4: en/ y es/ = páginas del lector dinámico (misma página en
+   los dos idiomas), full-es/ = documento completo en español, y los PDF para descargar.
 
 PARA EDITAR PREGUNTAS
    js/data/unit1.js, unit2.js, unit4.js

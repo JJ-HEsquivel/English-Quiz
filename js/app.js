@@ -45,7 +45,16 @@
       section: "Subtitle / section", inDoc: "As written in the document (English)",
       tip: "Tip: read that part of the document again, then come back and answer.",
       whereQ: "Where can I find this answer?", back: "Back", home: "Home",
-      langLabel: "Change language to Spanish", showOriginal: "Original in English"
+      langLabel: "Change language to Spanish", showOriginal: "Original in English",
+      docsTitle: "Documents", docsSub: "Read the unit text in English, in Spanish, or switch page by page.",
+      docEn: "English document", docEnDesc: "The original document, complete.",
+      docEs: "Spanish document", docEsDesc: "The complete translation into Spanish.",
+      reader: "Interactive reader", readerDesc: "Same format as the PDF, in English. Translate only the page you are reading.",
+      pages: "pages", download: "Download PDF", pageOf: function (a, b) { return "Page " + a + " of " + b; },
+      toEs: "Translate this page to Spanish", toEn: "Back to English",
+      showingEn: "English", showingEs: "Spanish (this page only)",
+      swipeHint: "Swipe or use ← → to change page. Pinch to zoom.",
+      openFull: "Open full image", loading: "Loading…"
     },
     es: {
       appTitle: "Práctica de Inglés Técnico",
@@ -79,7 +88,16 @@
       section: "Subtítulo / sección", inDoc: "Como aparece en el documento (en inglés)",
       tip: "Consejo: vuelve a leer esa parte del documento y luego regresa a responder.",
       whereQ: "¿Dónde encuentro esta respuesta?", back: "Atrás", home: "Inicio",
-      langLabel: "Cambiar idioma a inglés", showOriginal: "Original en inglés"
+      langLabel: "Cambiar idioma a inglés", showOriginal: "Original en inglés",
+      docsTitle: "Documentos", docsSub: "Lee el texto de la unidad en inglés, en español, o cambia página por página.",
+      docEn: "Documento en inglés", docEnDesc: "El documento original, completo.",
+      docEs: "Documento en español", docEsDesc: "La traducción completa al español.",
+      reader: "Lector dinámico", readerDesc: "Mismo formato que el PDF, en inglés. Traduce solo la página que estás leyendo.",
+      pages: "páginas", download: "Descargar PDF", pageOf: function (a, b) { return "Página " + a + " de " + b; },
+      toEs: "Cambiar esta página al español", toEn: "Volver al inglés",
+      showingEn: "Inglés", showingEs: "Español (solo esta página)",
+      swipeHint: "Desliza o usa ← → para cambiar de página. Pellizca para hacer zoom.",
+      openFull: "Abrir imagen completa", loading: "Cargando…"
     }
   };
   function T(k) { return UI[lang][k]; }
@@ -124,6 +142,10 @@
     doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>',
     section: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h10M4 18h13"/></svg>',
     page: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-1.5z"/><path d="M8 7h6"/></svg>',
+    book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>',
+    swap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg>',
+    dl: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>',
+    next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
     globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg>'
   };
 
@@ -328,7 +350,127 @@
         h("section", { class: "unit-head" },
           h("h1", { text: T("unit") + " " + unit.number + " — " + uTitle(u) }),
           h("p", { class: "muted", text: T("chooseLevel") })),
-        h("section", { class: "levels" }, cards)));
+        h("section", { class: "levels" }, cards),
+        docsSection(u)));
+  }
+
+  /* ---------- Documents ---------- */
+  var DOCS = window.QUIZ_DOCS || {};
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function docsSection(u) {
+    var d = DOCS[u], unit = DATA[u];
+    if (!d) return null;
+    function card(href, badge, title, desc, icon) {
+      return h("a", { class: "level-card", href: href, style: "--c:" + unit.color },
+        h("div", { class: "level-card__icon", html: icon }),
+        h("div", { class: "level-card__body" },
+          h("small", { text: badge }),
+          h("h3", { text: title }),
+          h("div", { class: "muted", style: "font-size:14px", text: desc })),
+        h("span", { class: "chev", html: ICONS.chev }));
+    }
+    return h("section", { class: "docs-sec" },
+      h("h2", { class: "sec-title", text: T("docsTitle") }),
+      h("p", { class: "muted", style: "margin:4px 0 0", text: T("docsSub") }),
+      h("div", { class: "levels" },
+        card("#/" + u + "/read/1", "EN ⇄ ES", T("reader"), T("readerDesc"), ICONS.swap),
+        card("#/" + u + "/doc/en", "EN · " + d.reader + " " + T("pages"), T("docEn"), T("docEnDesc"), ICONS.book),
+        card("#/" + u + "/doc/es", "ES · " + d.fullEs + " " + T("pages"), T("docEs"), T("docEsDesc"), ICONS.book)));
+  }
+
+  function viewDoc(u, which) {
+    var d = DOCS[u], unit = DATA[u];
+    var isEs = which === "es";
+    var n = isEs ? d.fullEs : d.reader;
+    var folder = isEs ? "full-es" : "en";
+    var pages = [];
+    for (var i = 1; i <= n; i++) {
+      pages.push(h("figure", { class: "page" },
+        h("img", { src: "docs/" + u + "/" + folder + "/p" + pad(i) + ".jpg", loading: i <= 2 ? "eager" : "lazy", decoding: "async",
+          alt: (isEs ? T("docEs") : T("docEn")) + " — " + T("pageOf")(i, n), width: "1020", height: "1320" }),
+        h("figcaption", { text: T("pageOf")(i, n) })));
+    }
+    app.replaceChildren(
+      topbar({ back: "#/" + u, kicker: T("unit") + " " + unit.number + " · " + T("docsTitle"), title: isEs ? T("docEs") : T("docEn"), home: true }),
+      h("main", { class: "wrap wrap--doc", style: "--c:" + unit.color },
+        h("div", { class: "doc-actions" },
+          h("a", { class: "btn", href: isEs ? d.pdfEs : d.pdfEn, download: "", style: "display:inline-flex;align-items:center;gap:8px;text-decoration:none" },
+            h("span", { class: "btn-ico", html: ICONS.dl }), T("download")),
+          h("a", { class: "btn btn--primary", href: "#/" + u + "/read/1", style: "display:inline-flex;align-items:center;gap:8px;text-decoration:none" },
+            h("span", { class: "btn-ico", html: ICONS.swap }), T("reader"))),
+        h("div", { class: "pages" }, pages)));
+  }
+
+  var readerLang = {}; // "u1-3" -> "es" (per page, only for this session)
+  function viewReader(u, p) {
+    var d = DOCS[u], unit = DATA[u];
+    var n = d.reader;
+    if (p < 1 || p > n) { location.hash = "#/" + u + "/read/1"; return; }
+    var keyP = u + "-" + p;
+    var showEs = readerLang[keyP] === "es";
+    function src(l, i) { return "docs/" + u + "/" + l + "/p" + pad(i) + ".jpg"; }
+
+    var img = h("img", { class: "reader__img", src: src(showEs ? "es" : "en", p), alt: T("pageOf")(p, n) + " — " + (showEs ? T("showingEs") : T("showingEn")),
+      width: "1020", height: "1320", decoding: "async" });
+    // preload the other language of this page and the next page, so switching is instant
+    [src(showEs ? "en" : "es", p), p < n ? src("en", p + 1) : null].forEach(function (s) { if (s) { var im = new Image(); im.src = s; } });
+
+    var toggle = h("button", { class: "btn btn--primary reader__toggle", type: "button", onclick: function () { flip(); } },
+      h("span", { class: "btn-ico", html: ICONS.swap }), showEs ? T("toEn") : T("toEs"));
+
+    var strip = h("nav", { class: "nav-strip", "aria-label": T("pages") },
+      Array.apply(null, Array(n)).map(function (_, i) {
+        var cls = "dot" + (i + 1 === p ? " is-current" : "") + (readerLang[u + "-" + (i + 1)] === "es" ? " is-es" : "");
+        return h("a", { class: cls, href: "#/" + u + "/read/" + (i + 1), text: String(i + 1), style: "display:grid;place-items:center;text-decoration:none" });
+      }));
+
+    var stage = h("div", { class: "reader__stage" + (showEs ? " is-es" : "") },
+      h("span", { class: "reader__flag", text: showEs ? "ES · " + T("showingEs") : "EN · " + T("showingEn") }),
+      img);
+
+    var nav = h("div", { class: "q-actions reader__nav" },
+      h("button", { class: "btn", type: "button", disabled: p === 1, onclick: function () { go(p - 1); } }, T("prev")),
+      h("span", { class: "reader__count", text: T("pageOf")(p, n) }),
+      h("button", { class: "btn", type: "button", disabled: p === n, onclick: function () { go(p + 1); } }, T("next")));
+
+    app.replaceChildren(
+      topbar({ back: "#/" + u, kicker: T("unit") + " " + unit.number + " · " + T("reader"), title: T("pageOf")(p, n), home: true }),
+      h("main", { class: "wrap wrap--doc", style: "--c:" + unit.color },
+        strip,
+        h("div", { class: "reader__bar" }, toggle,
+          h("a", { class: "btn", href: (showEs ? src("es", p) : src("en", p)), target: "_blank", rel: "noopener", text: T("openFull") })),
+        stage, nav,
+        h("p", { class: "foot", text: T("swipeHint") })));
+
+    var cur = strip.querySelector(".is-current");
+    if (cur && cur.scrollIntoView) cur.scrollIntoView({ block: "nearest", inline: "center" });
+
+    function flip() {
+      if (showEs) delete readerLang[keyP]; else readerLang[keyP] = "es";
+      render(true);
+    }
+    function go(i) { location.hash = "#/" + u + "/read/" + i; }
+
+    // swipe to change page (ignored while pinch-zooming)
+    var sx = null, sy = null, multi = false;
+    stage.addEventListener("touchstart", function (e) {
+      multi = e.touches.length > 1;
+      if (!multi) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }
+    }, { passive: true });
+    stage.addEventListener("touchend", function (e) {
+      if (multi || sx === null || (window.visualViewport && window.visualViewport.scale > 1.05)) { sx = null; return; }
+      var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+      sx = null;
+      if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        if (dx < 0 && p < n) go(p + 1); else if (dx > 0 && p > 1) go(p - 1);
+      }
+    });
+
+    keyHandler = function (e) {
+      if (e.key === "ArrowRight" && p < n) go(p + 1);
+      else if (e.key === "ArrowLeft" && p > 1) go(p - 1);
+      else if (e.key.toLowerCase() === "t" || e.key === " ") { e.preventDefault(); flip(); }
+    };
   }
 
   /* ---------- MC & TF ---------- */
@@ -622,6 +764,8 @@
     var y = window.scrollY;
 
     if (!u || !DATA[u]) viewHome();
+    else if (key === "doc" && DOCS[u]) viewDoc(u, n === "es" ? "es" : "en");
+    else if (key === "read" && DOCS[u]) viewReader(u, parseInt(n, 10) || 1);
     else if (!key || !LEVELS.some(function (L) { return L.key === key; })) viewUnit(u);
     else if (n === "results") viewResults(u, key);
     else {

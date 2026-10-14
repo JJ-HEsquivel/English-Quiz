@@ -7,6 +7,7 @@
   var UNIT_ORDER = ["u1", "u2", "u4"].filter(function (k) { return DATA[k]; });
   var STORE_KEY = "tech-english-quiz-v1";
   var LANG_KEY = "tech-english-quiz-lang";
+  var NOTES_KEY = "tech-english-quiz-notes-v1";
 
   /* ================= Language ================= */
   var lang = "en";
@@ -49,12 +50,29 @@
       docsTitle: "Documents", docsSub: "Read the unit text in English, in Spanish, or switch page by page.",
       docEn: "English document", docEnDesc: "The original document, complete.",
       docEs: "Spanish document", docEsDesc: "The complete translation into Spanish.",
-      reader: "Interactive reader", readerDesc: "Same format as the PDF, in English. Translate only the page you are reading.",
+      reader: "Interactive reader", readerDesc: "Same format as the PDF, in English. Highlight the text, send it to your notes and translate only the page you are reading.",
       pages: "pages", download: "Download PDF", pageOf: function (a, b) { return "Page " + a + " of " + b; },
       toEs: "Translate this page to Spanish", toEn: "Back to English",
       showingEn: "English", showingEs: "Spanish (this page only)",
       swipeHint: "Swipe or use ← → to change page. Pinch to zoom.",
-      openFull: "Open full image", loading: "Loading…"
+      openFull: "Open full image", loading: "Loading…",
+      notesTitle: "My notes", notesSub: "Two notes for this unit. Paste text from the documents or write your own — everything is saved on this device.",
+      note: function (n) { return "Note " + n; }, noteEmpty: "Empty — tap to write.",
+      notePh: "Write here, or paste text from the documents…", savedOk: "Saved ✓", chars: "characters",
+      clearNote: "Empty this note", confirmClear: function (n) { return "Delete all the text of Note " + n + "?"; },
+      openNotes: "My notes", close: "Close", expand: "Open in full screen",
+      highlight: "Highlight", copy: "Copy", copied: "Copied", addTo: function (n) { return "+ Note " + n; },
+      added: function (n) { return "Added to Note " + n; }, removeHl: "Remove highlight", hlRemoved: "Highlight removed",
+      clearPageHl: "Remove highlights on this page", confirmPageHl: "Remove all the highlights on this page?",
+      hlTitle: "My highlights", hlCount: function (n) { return n + " highlight" + (n === 1 ? "" : "s"); },
+      hlNone: "No highlights yet. Select English text in the reader to highlight it.",
+      selHint: "Select English text to highlight it, copy it or send it to your notes.",
+      selHintEs: "Select text to copy it or send it to your notes.",
+      esCopyHint: "This Spanish page is only an image. To copy text in Spanish, open the Spanish document.",
+      goPage: "Go to page",
+      backup: "Backup copy", backupDesc: "Your notes and highlights stay in this browser. Download a copy to keep them safe or to move them to another device.",
+      exportB: "Download copy", importB: "Restore a copy", importOk: "Copy restored",
+      importBad: "That file is not a valid copy.", confirmImport: "Replace your current notes and highlights with this copy?"
     },
     es: {
       appTitle: "Práctica de Inglés Técnico",
@@ -92,12 +110,29 @@
       docsTitle: "Documentos", docsSub: "Lee el texto de la unidad en inglés, en español, o cambia página por página.",
       docEn: "Documento en inglés", docEnDesc: "El documento original, completo.",
       docEs: "Documento en español", docEsDesc: "La traducción completa al español.",
-      reader: "Lector dinámico", readerDesc: "Mismo formato que el PDF, en inglés. Traduce solo la página que estás leyendo.",
+      reader: "Lector dinámico", readerDesc: "Mismo formato que el PDF, en inglés. Subraya el texto, envíalo a tus apuntes y traduce solo la página que estás leyendo.",
       pages: "páginas", download: "Descargar PDF", pageOf: function (a, b) { return "Página " + a + " de " + b; },
       toEs: "Cambiar esta página al español", toEn: "Volver al inglés",
       showingEn: "Inglés", showingEs: "Español (solo esta página)",
       swipeHint: "Desliza o usa ← → para cambiar de página. Pellizca para hacer zoom.",
-      openFull: "Abrir imagen completa", loading: "Cargando…"
+      openFull: "Abrir imagen completa", loading: "Cargando…",
+      notesTitle: "Mis apuntes", notesSub: "Dos apuntes para esta unidad. Pega texto de los documentos o escribe lo que quieras: todo se guarda en este dispositivo.",
+      note: function (n) { return "Apunte " + n; }, noteEmpty: "Vacío — toca para escribir.",
+      notePh: "Escribe aquí o pega texto de los documentos…", savedOk: "Guardado ✓", chars: "caracteres",
+      clearNote: "Vaciar este apunte", confirmClear: function (n) { return "¿Borrar todo el texto del Apunte " + n + "?"; },
+      openNotes: "Mis apuntes", close: "Cerrar", expand: "Abrir en pantalla completa",
+      highlight: "Subrayar", copy: "Copiar", copied: "Copiado", addTo: function (n) { return "+ Apunte " + n; },
+      added: function (n) { return "Añadido al Apunte " + n; }, removeHl: "Quitar subrayado", hlRemoved: "Subrayado quitado",
+      clearPageHl: "Quitar subrayados de esta página", confirmPageHl: "¿Quitar todos los subrayados de esta página?",
+      hlTitle: "Mis subrayados", hlCount: function (n) { return n + " subrayado" + (n === 1 ? "" : "s"); },
+      hlNone: "Todavía no tienes subrayados. Selecciona texto en inglés en el lector para subrayarlo.",
+      selHint: "Selecciona texto en inglés para subrayarlo, copiarlo o enviarlo a tus apuntes.",
+      selHintEs: "Selecciona texto para copiarlo o enviarlo a tus apuntes.",
+      esCopyHint: "Esta página en español es solo imagen. Para copiar texto en español, abre el Documento en español.",
+      goPage: "Ir a la página",
+      backup: "Copia de seguridad", backupDesc: "Tus apuntes y subrayados quedan guardados en este navegador. Descarga una copia para tenerlos seguros o pasarlos a otro dispositivo.",
+      exportB: "Descargar copia", importB: "Restaurar una copia", importOk: "Copia restaurada",
+      importBad: "Ese archivo no es una copia válida.", confirmImport: "¿Reemplazar tus apuntes y subrayados actuales por esta copia?"
     }
   };
   function T(k) { return UI[lang][k]; }
@@ -146,13 +181,52 @@
     swap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg>',
     dl: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>',
     next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
-    globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg>'
+    globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg>',
+    note: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>',
+    x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+    expand: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg>',
+    mark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M7 16l2-6 7-7 3 3-7 7z"/></svg>'
   };
 
   /* ================= Storage (safe) ================= */
   var progress = {};
   try { progress = JSON.parse(localStorage.getItem(STORE_KEY) || "{}") || {}; } catch (e) { progress = {}; }
   function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(progress)); } catch (e) { /* storage unavailable */ } }
+
+  // Notes & highlights: { notes: { u1: ["", ""] }, hl: { "u1-3": [{ id, s: [item, char], e: [item, char], c, t }] } }
+  var notesDb = {};
+  try { notesDb = JSON.parse(localStorage.getItem(NOTES_KEY) || "{}") || {}; } catch (e) { notesDb = {}; }
+  function fixNotesDb() {
+    if (!notesDb || typeof notesDb !== "object") notesDb = {};
+    if (!notesDb.notes || typeof notesDb.notes !== "object") notesDb.notes = {};
+    if (!notesDb.hl || typeof notesDb.hl !== "object") notesDb.hl = {};
+  }
+  fixNotesDb();
+  function saveNotes() {
+    try { localStorage.setItem(NOTES_KEY, JSON.stringify(notesDb)); return true; } catch (e) { toast("⚠ " + e.message); return false; }
+  }
+  // ask the browser not to evict this site's storage
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) { /* ignore */ }
+  function getNote(u, k) { var a = notesDb.notes[u]; return (a && a[k - 1]) || ""; }
+  function setNote(u, k, v) {
+    var a = notesDb.notes[u] = notesDb.notes[u] || ["", ""];
+    a[k - 1] = v;
+    return saveNotes();
+  }
+  function appendNote(u, k, text) {
+    var cur = getNote(u, k);
+    setNote(u, k, cur ? cur.replace(/\s+$/, "") + "\n\n" + text : text);
+  }
+  function hlOf(u, p) { return notesDb.hl[u + "-" + p] || []; }
+  function setHl(u, p, list) {
+    if (list.length) notesDb.hl[u + "-" + p] = list; else delete notesDb.hl[u + "-" + p];
+    saveNotes();
+  }
+  function hlCountUnit(u) {
+    var n = 0;
+    for (var k in notesDb.hl) if (k.indexOf(u + "-") === 0) n += notesDb.hl[k].length;
+    return n;
+  }
 
   function lvl(u, key) {
     progress[u] = progress[u] || {};
@@ -351,7 +425,165 @@
           h("h1", { text: T("unit") + " " + unit.number + " — " + uTitle(u) }),
           h("p", { class: "muted", text: T("chooseLevel") })),
         h("section", { class: "levels" }, cards),
+        notesSection(u),
         docsSection(u)));
+  }
+
+  /* ---------- Notes (2 per unit) ---------- */
+  function notesSection(u) {
+    var unit = DATA[u], nHl = hlCountUnit(u);
+    function card(k) {
+      var txt = getNote(u, k).trim();
+      return h("a", { class: "level-card note-card", href: "#/" + u + "/notes/" + k, style: "--c:" + unit.color },
+        h("div", { class: "level-card__icon", html: ICONS.note }),
+        h("div", { class: "level-card__body" },
+          h("small", { text: txt ? txt.length + " " + T("chars") : "" }),
+          h("h3", { text: T("note")(k) }),
+          h("div", { class: "muted note-card__prev", text: txt ? txt.slice(0, 160) : T("noteEmpty") })),
+        h("span", { class: "chev", html: ICONS.chev }));
+    }
+    return h("section", { class: "docs-sec" },
+      h("h2", { class: "sec-title", text: T("notesTitle") }),
+      h("p", { class: "muted", style: "margin:4px 0 0", text: T("notesSub") }),
+      h("div", { class: "levels notes-grid" }, card(1), card(2)),
+      h("p", { style: "margin:10px 0 0" },
+        h("a", { class: "hl-link", href: "#/" + u + "/notes/1#hl" },
+          h("span", { class: "btn-ico", html: ICONS.mark }), T("hlTitle") + " · " + T("hlCount")(nHl))));
+  }
+
+  // Textarea that saves itself while you type
+  function noteEditor(u, k, cls) {
+    var status = h("span", { class: "note-status", "aria-live": "polite" });
+    var ta = h("textarea", { class: "note-ta" + (cls ? " " + cls : ""), placeholder: T("notePh"), spellcheck: "true",
+      "aria-label": T("note")(k) });
+    ta.value = getNote(u, k);
+    var t = null, dirty = false; // only text typed here is saved (never a stale copy)
+    function flush() {
+      clearTimeout(t); t = null;
+      if (!dirty) return;
+      dirty = false;
+      if (setNote(u, k, ta.value)) status.textContent = T("savedOk");
+    }
+    ta.addEventListener("input", function () { dirty = true; status.textContent = ""; clearTimeout(t); t = setTimeout(flush, 350); });
+    ta.addEventListener("blur", flush);
+    editorFlushes.push(flush);
+    ta.dataset.u = u; ta.dataset.k = k;
+    return { ta: ta, status: status, flush: flush };
+  }
+  var editorFlushes = [];
+  function flushEditors() { editorFlushes.forEach(function (f) { f(); }); }
+  window.addEventListener("pagehide", flushEditors);
+  function refreshOpenEditors(u, k) {
+    Array.prototype.forEach.call(document.querySelectorAll(".note-ta"), function (ta) {
+      if (ta.dataset.u === u && +ta.dataset.k === k) ta.value = getNote(u, k);
+    });
+  }
+  function noteTabs(k, onPick) {
+    return h("div", { class: "tabs", role: "tablist" }, [1, 2].map(function (i) {
+      return h("button", { class: "tab" + (i === k ? " is-on" : ""), type: "button", role: "tab", "aria-selected": i === k ? "true" : "false",
+        onclick: function () { onPick(i); } }, T("note")(i));
+    }));
+  }
+
+  function viewNotes(u, k) {
+    var unit = DATA[u], d = DOCS[u];
+    if (k !== 1 && k !== 2) k = 1;
+    var ed = noteEditor(u, k, "note-ta--big"), ta = ed.ta;
+
+    var clearBtn = h("button", { class: "btn", type: "button", onclick: function () {
+      if (!ta.value.trim() || !confirm(T("confirmClear")(k))) return;
+      ta.value = ""; setNote(u, k, ""); ta.focus();
+    } }, T("clearNote"));
+
+    // highlights list
+    var hlBox = h("div", { class: "hl-list" });
+    function fillHl() {
+      var rows = [];
+      for (var p = 1; p <= (d ? d.reader : 0); p++) {
+        hlOf(u, p).forEach(function (hl) {
+          var pp = p;
+          rows.push(h("div", { class: "hl-row hl--" + hl.c },
+            h("div", { class: "hl-row__txt" },
+              h("small", null, h("a", { href: "#/" + u + "/read/" + pp, text: T("goPage") + " " + pp })),
+              h("span", { text: hl.t })),
+            h("button", { class: "iconbtn", type: "button", "aria-label": T("removeHl"), title: T("removeHl"), html: ICONS.x,
+              onclick: function () { removeHl(u, pp, hl.id); fillHl(); } })));
+        });
+      }
+      hlBox.replaceChildren.apply(hlBox, rows.length ? rows : [h("p", { class: "muted", text: T("hlNone") })]);
+    }
+    fillHl();
+
+    var fileIn = h("input", { type: "file", accept: "application/json,.json", hidden: true, onchange: function () {
+      var f = fileIn.files && fileIn.files[0]; if (!f) return;
+      var rd = new FileReader();
+      rd.onload = function () {
+        var data = null;
+        try { data = JSON.parse(rd.result); } catch (e) { data = null; }
+        if (!data || typeof data !== "object" || (!data.notes && !data.hl)) { toast(T("importBad")); return; }
+        if (!confirm(T("confirmImport"))) return;
+        editorFlushes = [];
+        notesDb = data; fixNotesDb(); saveNotes(); toast(T("importOk")); render(true);
+      };
+      rd.readAsText(f);
+    } });
+
+    app.replaceChildren(
+      topbar({ back: "#/" + u, kicker: T("unit") + " " + unit.number + " · " + T("notesTitle"), title: T("note")(k), home: true }),
+      h("main", { class: "wrap", style: "--c:" + unit.color },
+        h("div", { class: "notes-top" },
+          noteTabs(k, function (i) { ed.flush(); location.hash = "#/" + u + "/notes/" + i; }),
+          d ? h("a", { class: "btn", href: "#/" + u + "/read/1", style: "display:inline-flex;align-items:center;gap:8px;text-decoration:none" },
+            h("span", { class: "btn-ico", html: ICONS.swap }), T("reader")) : null),
+        h("div", { class: "card note-card-ed" }, ta,
+          h("div", { class: "note-foot" }, ed.status, clearBtn)),
+        h("section", { class: "docs-sec", id: "hl" },
+          h("h2", { class: "sec-title", text: T("hlTitle") }),
+          hlBox),
+        h("section", { class: "docs-sec" },
+          h("h2", { class: "sec-title", text: T("backup") }),
+          h("p", { class: "muted", style: "margin:4px 0 12px", text: T("backupDesc") }),
+          h("div", { class: "doc-actions" },
+            h("button", { class: "btn", type: "button", onclick: exportNotes },
+              h("span", { class: "btn-ico", html: ICONS.dl }), " " + T("exportB")),
+            h("button", { class: "btn", type: "button", onclick: function () { fileIn.click(); } }, T("importB")),
+            fileIn))));
+    if (location.hash.indexOf("#hl") > 0) {
+      var sec = document.getElementById("hl"); if (sec) setTimeout(function () { sec.scrollIntoView(); }, 0);
+    }
+  }
+  function exportNotes() {
+    var blob = new Blob([JSON.stringify(notesDb, null, 2)], { type: "application/json" });
+    var a = h("a", { href: URL.createObjectURL(blob), download: "apuntes-technical-english-" + new Date().toISOString().slice(0, 10) + ".json" });
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  }
+
+  // Side panel with the two notes, available while reading
+  var drawer = { open: false, k: 1 };
+  function mountDrawer(u) {
+    document.body.classList.toggle("has-drawer", drawer.open);
+    if (!drawer.open) return;
+    var ed = noteEditor(u, drawer.k);
+    var el = h("aside", { class: "drawer", "aria-label": T("notesTitle"), style: "--c:" + DATA[u].color },
+      h("div", { class: "drawer__head" },
+        noteTabs(drawer.k, function (i) { ed.flush(); drawer.k = i; el.remove(); mountDrawer(u); }),
+        h("a", { class: "iconbtn", href: "#/" + u + "/notes/" + drawer.k, "aria-label": T("expand"), title: T("expand"), html: ICONS.expand }),
+        h("button", { class: "iconbtn", type: "button", "aria-label": T("close"), title: T("close"), html: ICONS.x,
+          onclick: function () { ed.flush(); toggleDrawer(u); } })),
+      ed.ta,
+      h("div", { class: "note-foot" }, ed.status));
+    app.appendChild(el);
+  }
+  function toggleDrawer(u) {
+    drawer.open = !drawer.open;
+    var old = app.querySelector(".drawer"); if (old) old.remove();
+    mountDrawer(u);
+    var b = app.querySelector(".notes-btn"); if (b) b.classList.toggle("is-on", drawer.open);
+  }
+  function notesButton(u) {
+    return h("button", { class: "btn notes-btn" + (drawer.open ? " is-on" : ""), type: "button", onclick: function () { toggleDrawer(u); } },
+      h("span", { class: "btn-ico", html: ICONS.note }), T("openNotes"));
   }
 
   /* ---------- Documents ---------- */
@@ -378,6 +610,242 @@
         card("#/" + u + "/doc/es", "ES · " + d.fullEs + " " + T("pages"), T("docEs"), T("docEsDesc"), ICONS.book)));
   }
 
+  /* ---------- Text layer over the page images (select, copy, highlight) ---------- */
+  var TEXT = window.QUIZ_TEXT || {};
+  var HL_COLORS = ["y", "g", "p"];
+  function pageData(u, l) { return TEXT[u] && TEXT[u][l]; }
+  function pageImg(u, l, attrs) {
+    var d = pageData(u, l);
+    attrs.width = "1000"; attrs.height = String(Math.round(1000 * (d ? d.r : 1.294)));
+    attrs.draggable = "false";
+    return h("img", attrs);
+  }
+
+  // Page image with transparent, selectable text on top (same position as the words in the image).
+  // canHl: only the English pages can be highlighted.
+  function textPage(u, l, p, img, canHl) {
+    var data = pageData(u, l), items = data && data.p[p - 1];
+    var wrap = h("div", { class: "pg" }, img);
+    if (!items || !items.length) return wrap;
+    var layer = h("div", { class: "tl" + (canHl ? " tl--hl" : ""), lang: l });
+    layer._tl = { u: u, l: l, p: p, items: items, r: data.r, canHl: canHl };
+    items.forEach(function (it, i) {
+      layer.appendChild(h("span", { "data-i": String(i),
+        style: "left:" + (it[0] * 100).toFixed(2) + "%;top:" + (it[1] * 100).toFixed(2) + "%;font-size:" + (it[2] * 100).toFixed(3) + "cqw" }, it[4]));
+    });
+    wrap.appendChild(layer);
+    if (canHl) paintHl(layer);
+    return wrap;
+  }
+  // stretch each word horizontally so it covers the same width as in the image
+  function fitLayers() {
+    Array.prototype.forEach.call(app.querySelectorAll(".tl"), function (layer) {
+      var W = layer.clientWidth, spans = layer.children, widths = [], i;
+      if (!W) return;
+      for (i = 0; i < spans.length; i++) widths.push(spans[i].offsetWidth);
+      for (i = 0; i < spans.length; i++) {
+        var target = layer._tl.items[+spans[i].dataset.i][3] * W;
+        if (widths[i] > 0 && target > 0) spans[i].style.transform = "scaleX(" + (target / widths[i]).toFixed(4) + ")";
+      }
+    });
+  }
+  var fitT = null;
+  window.addEventListener("resize", function () { clearTimeout(fitT); fitT = setTimeout(fitLayers, 150); });
+
+  function paintHl(layer) {
+    var tl = layer._tl, list = hlOf(tl.u, tl.p);
+    Array.prototype.forEach.call(layer.children, function (sp) {
+      var i = +sp.dataset.i, s = tl.items[i][4], cuts = [];
+      list.forEach(function (hl) {
+        if (i < hl.s[0] || i > hl.e[0]) return;
+        var a = i === hl.s[0] ? hl.s[1] : 0, b = i === hl.e[0] ? hl.e[1] : s.length;
+        if (b > a) cuts.push([a, b, hl]);
+      });
+      if (!cuts.length) { if (sp.children.length) sp.textContent = s; return; }
+      cuts.sort(function (x, y) { return x[0] - y[0]; });
+      var out = [], pos = 0;
+      cuts.forEach(function (c) {
+        var a = Math.max(c[0], pos);
+        if (c[1] <= a) return;
+        if (a > pos) out.push(s.slice(pos, a));
+        out.push(h("mark", { class: "hl hl--" + c[2].c, "data-id": c[2].id }, s.slice(a, c[1])));
+        pos = c[1];
+      });
+      if (pos < s.length) out.push(s.slice(pos));
+      sp.replaceChildren.apply(sp, out);
+    });
+  }
+
+  // positions are [item index, character offset]
+  function cmpPos(a, b) { return a[0] - b[0] || a[1] - b[1]; }
+  function posIn(layer, node, off, isEnd) {
+    var tl = layer._tl, el = node.nodeType === 3 ? node.parentNode : node;
+    var sp = el && el.closest ? el.closest("span[data-i]") : null;
+    if (sp && layer.contains(sp)) {
+      var r = document.createRange();
+      r.selectNodeContents(sp); r.setEnd(node, off);
+      return [+sp.dataset.i, r.toString().length];
+    }
+    if (node === layer) {
+      var kids = layer.children, k = isEnd ? kids[off - 1] : kids[off];
+      if (k) return isEnd ? [+k.dataset.i, tl.items[+k.dataset.i][4].length] : [+k.dataset.i, 0];
+      var last = tl.items.length - 1;
+      return isEnd ? [0, 0] : [last, tl.items[last][4].length];
+    }
+    return null;
+  }
+  // rebuild readable text from the PDF items (spaces, joined lines, paragraphs)
+  function textBetween(tl, a, b) {
+    var out = "", prev = null;
+    for (var i = a[0]; i <= b[0]; i++) {
+      var it = tl.items[i], s = it[4];
+      var piece = s.slice(i === a[0] ? a[1] : 0, i === b[0] ? b[1] : s.length);
+      if (prev) out += joiner(prev, it, tl.r, out);
+      out += piece; prev = it;
+    }
+    return out.replace(/[ \t]+\n/g, "\n").replace(/ {2,}/g, " ");
+  }
+  function joiner(a, b, r, sofar) {
+    var lineH = a[2] / r, dy = b[1] - a[1];
+    if (Math.abs(dy) > lineH * 0.5) {
+      if (dy > lineH * 1.85 || dy < 0) return "\n";
+      return /-$/.test(sofar) ? "" : " ";
+    }
+    if (/\s$/.test(sofar) || /^\s/.test(b[4])) return "";
+    return b[0] - (a[0] + a[3]) > a[2] * 0.12 ? " " : "";
+  }
+  function selInfo() {
+    var sel = window.getSelection && window.getSelection();
+    if (!sel || !sel.rangeCount || sel.isCollapsed) return null;
+    var r = sel.getRangeAt(0), layer = null;
+    [r.startContainer, r.endContainer].some(function (n) {
+      var el = n.nodeType === 3 ? n.parentNode : n;
+      layer = el && el.closest ? el.closest(".tl") : null;
+      return layer && layer._tl;
+    });
+    if (!layer || !layer._tl) return null;
+    var tl = layer._tl, last = tl.items.length - 1;
+    var a = layer.contains(r.startContainer) ? posIn(layer, r.startContainer, r.startOffset, false) : [0, 0];
+    var b = layer.contains(r.endContainer) ? posIn(layer, r.endContainer, r.endOffset, true) : [last, tl.items[last][4].length];
+    if (!a || !b || cmpPos(a, b) >= 0) return null;
+    var text = textBetween(tl, a, b).trim();
+    if (!text) return null;
+    return { layer: layer, s: a, e: b, text: text, rect: r.getBoundingClientRect() };
+  }
+
+  /* Floating bar shown over selected text: highlight (English only), copy, send to a note */
+  var selBar = null, selCur = null;
+  function hideSelBar() { if (selBar) selBar.hidden = true; selCur = null; }
+  function showSelBar(info, hl) {
+    if (!selBar) {
+      selBar = h("div", { class: "selbar", role: "toolbar", hidden: true });
+      selBar.addEventListener("mousedown", function (e) { e.preventDefault(); }); // keep the selection
+      document.body.appendChild(selBar);
+    }
+    selCur = info;
+    var tl = info.layer._tl, kids = [];
+    function btn(label, fn, cls) { return h("button", { type: "button", class: "selbar__btn" + (cls ? " " + cls : ""), onclick: fn }, label); }
+    if (hl) {
+      kids.push(btn(T("removeHl"), function () {
+        removeHl(tl.u, tl.p, hl.id); paintHl(info.layer); hideSelBar(); toast(T("hlRemoved"));
+      }, "selbar__rm"));
+    } else if (tl.canHl) {
+      kids.push(h("span", { class: "selbar__lbl", title: T("highlight") }, h("span", { class: "btn-ico", html: ICONS.mark }), T("highlight")));
+      HL_COLORS.forEach(function (c) {
+        kids.push(h("button", { class: "selbar__dot hl--" + c, type: "button", "aria-label": T("highlight"), title: T("highlight"),
+          onclick: function () { addHl(info, c); } }));
+      });
+      kids.push(h("i", { class: "selbar__sep" }));
+    }
+    kids.push(btn(T("copy"), function () { copyText(info.text); hideSelBar(); }));
+    kids.push(btn(T("addTo")(1), function () { sendToNote(tl.u, 1, info.text); }));
+    kids.push(btn(T("addTo")(2), function () { sendToNote(tl.u, 2, info.text); }));
+    selBar.replaceChildren.apply(selBar, kids);
+    selBar.hidden = false;
+    placeSelBar(info.rect);
+  }
+  function placeSelBar(rect) {
+    var bw = selBar.offsetWidth, bh = selBar.offsetHeight;
+    var vw = document.documentElement.clientWidth, vh = window.innerHeight;
+    var gap = window.matchMedia && matchMedia("(pointer: coarse)").matches ? 30 : 10; // leave room for touch handles
+    var top = rect.bottom + gap;
+    if (top + bh > vh - 8) top = rect.top - bh - gap;
+    top = Math.max(8, Math.min(top, vh - bh - 8));
+    var left = Math.max(8, Math.min(rect.left + rect.width / 2 - bw / 2, vw - bw - 8));
+    selBar.style.top = top + "px"; selBar.style.left = left + "px";
+  }
+  function addHl(info, c) {
+    var tl = info.layer._tl;
+    // a new highlight replaces the ones it overlaps
+    var list = hlOf(tl.u, tl.p).filter(function (x) { return cmpPos(x.e, info.s) <= 0 || cmpPos(x.s, info.e) >= 0; });
+    list.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), s: info.s, e: info.e, c: c, t: info.text });
+    list.sort(function (x, y) { return cmpPos(x.s, y.s); });
+    setHl(tl.u, tl.p, list);
+    paintHl(info.layer);
+    window.getSelection().removeAllRanges();
+    hideSelBar();
+    refreshPageHlBtn();
+  }
+  function removeHl(u, p, id) {
+    setHl(u, p, hlOf(u, p).filter(function (x) { return x.id !== id; }));
+    refreshPageHlBtn();
+  }
+  function refreshPageHlBtn() {
+    var b = app.querySelector(".clear-hl");
+    if (b) b.hidden = !hlOf(b.dataset.u, +b.dataset.p).length;
+  }
+  function sendToNote(u, k, text) {
+    flushEditors();
+    appendNote(u, k, text);
+    refreshOpenEditors(u, k);
+    toast(T("added")(k));
+    window.getSelection().removeAllRanges();
+    hideSelBar();
+  }
+  function copyText(text) {
+    function fallback() {
+      var ta = h("textarea", { style: "position:fixed;top:-1000px;left:0;opacity:0" });
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); toast(T("copied")); } catch (e) { /* ignore */ }
+      ta.remove();
+    }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(function () { toast(T("copied")); }, fallback);
+    else fallback();
+  }
+
+  var selT = null;
+  document.addEventListener("selectionchange", function () {
+    clearTimeout(selT);
+    selT = setTimeout(function () {
+      var info = selInfo();
+      if (info) showSelBar(info);
+      else if (selCur && !selCur.hl) hideSelBar();
+    }, 180);
+  });
+  document.addEventListener("click", function (e) {
+    if (selBar && selBar.contains(e.target)) return;
+    var m = e.target.closest && e.target.closest(".tl mark.hl"), sel = window.getSelection();
+    if (m && sel && sel.isCollapsed) {
+      var layer = m.closest(".tl"), tl = layer._tl;
+      var hl = hlOf(tl.u, tl.p).filter(function (x) { return x.id === m.dataset.id; })[0];
+      if (hl) { showSelBar({ layer: layer, s: hl.s, e: hl.e, text: hl.t, rect: m.getBoundingClientRect(), hl: true }, hl); return; }
+    }
+    if (selCur && selCur.hl) hideSelBar();
+  });
+  // Ctrl+C / native "Copy" gives clean text (with spaces and paragraphs)
+  document.addEventListener("copy", function (e) {
+    var info = selInfo();
+    if (!info || !e.clipboardData) return;
+    e.clipboardData.setData("text/plain", info.text);
+    e.preventDefault();
+  });
+  window.addEventListener("scroll", function () {
+    if (!selCur || !selBar || selBar.hidden) return;
+    if (selCur.hl) { hideSelBar(); return; }
+    var sel = window.getSelection();
+    if (sel && sel.rangeCount && !sel.isCollapsed) placeSelBar(sel.getRangeAt(0).getBoundingClientRect());
+  }, { passive: true });
+
   function viewDoc(u, which) {
     var d = DOCS[u], unit = DATA[u];
     var isEs = which === "es";
@@ -385,9 +853,10 @@
     var folder = isEs ? "full-es" : "en";
     var pages = [];
     for (var i = 1; i <= n; i++) {
+      var img = pageImg(u, isEs ? "es" : "en", { src: "docs/" + u + "/" + folder + "/p" + pad(i) + ".jpg", loading: i <= 2 ? "eager" : "lazy", decoding: "async",
+        alt: (isEs ? T("docEs") : T("docEn")) + " — " + T("pageOf")(i, n) });
       pages.push(h("figure", { class: "page" },
-        h("img", { src: "docs/" + u + "/" + folder + "/p" + pad(i) + ".jpg", loading: i <= 2 ? "eager" : "lazy", decoding: "async",
-          alt: (isEs ? T("docEs") : T("docEn")) + " — " + T("pageOf")(i, n), width: "1020", height: "1320" }),
+        textPage(u, isEs ? "es" : "en", i, img, !isEs),
         h("figcaption", { text: T("pageOf")(i, n) })));
     }
     app.replaceChildren(
@@ -397,8 +866,12 @@
           h("a", { class: "btn", href: isEs ? d.pdfEs : d.pdfEn, download: "", style: "display:inline-flex;align-items:center;gap:8px;text-decoration:none" },
             h("span", { class: "btn-ico", html: ICONS.dl }), T("download")),
           h("a", { class: "btn btn--primary", href: "#/" + u + "/read/1", style: "display:inline-flex;align-items:center;gap:8px;text-decoration:none" },
-            h("span", { class: "btn-ico", html: ICONS.swap }), T("reader"))),
+            h("span", { class: "btn-ico", html: ICONS.swap }), T("reader")),
+          notesButton(u)),
+        h("p", { class: "sel-hint", text: isEs ? T("selHintEs") : T("selHint") }),
         h("div", { class: "pages" }, pages)));
+    mountDrawer(u);
+    requestAnimationFrame(fitLayers);
   }
 
   var readerLang = {}; // "u1-3" -> "es" (per page, only for this session)
@@ -410,8 +883,8 @@
     var showEs = readerLang[keyP] === "es";
     function src(l, i) { return "docs/" + u + "/" + l + "/p" + pad(i) + ".jpg"; }
 
-    var img = h("img", { class: "reader__img", src: src(showEs ? "es" : "en", p), alt: T("pageOf")(p, n) + " — " + (showEs ? T("showingEs") : T("showingEn")),
-      width: "1020", height: "1320", decoding: "async" });
+    var img = pageImg(u, "en", { class: "reader__img", src: src(showEs ? "es" : "en", p), alt: T("pageOf")(p, n) + " — " + (showEs ? T("showingEs") : T("showingEn")),
+      decoding: "async" });
     // preload the other language of this page and the next page, so switching is instant
     [src(showEs ? "en" : "es", p), p < n ? src("en", p + 1) : null].forEach(function (s) { if (s) { var im = new Image(); im.src = s; } });
 
@@ -420,27 +893,39 @@
 
     var strip = h("nav", { class: "nav-strip", "aria-label": T("pages") },
       Array.apply(null, Array(n)).map(function (_, i) {
-        var cls = "dot" + (i + 1 === p ? " is-current" : "") + (readerLang[u + "-" + (i + 1)] === "es" ? " is-es" : "");
+        var cls = "dot" + (i + 1 === p ? " is-current" : "") + (readerLang[u + "-" + (i + 1)] === "es" ? " is-es" : "") +
+          (hlOf(u, i + 1).length ? " has-hl" : "");
         return h("a", { class: cls, href: "#/" + u + "/read/" + (i + 1), text: String(i + 1), style: "display:grid;place-items:center;text-decoration:none" });
       }));
 
+    // English: selectable text (highlight / copy / notes). Spanish: image only.
     var stage = h("div", { class: "reader__stage" + (showEs ? " is-es" : "") },
       h("span", { class: "reader__flag", text: showEs ? "ES · " + T("showingEs") : "EN · " + T("showingEn") }),
-      img);
+      showEs ? img : textPage(u, "en", p, img, true));
 
     var nav = h("div", { class: "q-actions reader__nav" },
       h("button", { class: "btn", type: "button", disabled: p === 1, onclick: function () { go(p - 1); } }, T("prev")),
       h("span", { class: "reader__count", text: T("pageOf")(p, n) }),
       h("button", { class: "btn", type: "button", disabled: p === n, onclick: function () { go(p + 1); } }, T("next")));
 
+    var hint = showEs
+      ? h("p", { class: "sel-hint" }, T("esCopyHint") + " ", h("a", { href: "#/" + u + "/doc/es", text: T("docEs") + " →" }))
+      : h("p", { class: "sel-hint" }, T("selHint") + " ",
+          h("button", { class: "linkbtn clear-hl", type: "button", "data-u": u, "data-p": String(p), hidden: !hlOf(u, p).length,
+            onclick: function () { if (confirm(T("confirmPageHl"))) { setHl(u, p, []); render(true); } } }, T("clearPageHl")));
+
     app.replaceChildren(
       topbar({ back: "#/" + u, kicker: T("unit") + " " + unit.number + " · " + T("reader"), title: T("pageOf")(p, n), home: true }),
       h("main", { class: "wrap wrap--doc", style: "--c:" + unit.color },
         strip,
         h("div", { class: "reader__bar" }, toggle,
+          notesButton(u),
           h("a", { class: "btn", href: (showEs ? src("es", p) : src("en", p)), target: "_blank", rel: "noopener", text: T("openFull") })),
+        hint,
         stage, nav,
         h("p", { class: "foot", text: T("swipeHint") })));
+    mountDrawer(u);
+    requestAnimationFrame(fitLayers);
 
     var cur = strip.querySelector(".is-current");
     if (cur && cur.scrollIntoView) cur.scrollIntoView({ block: "nearest", inline: "center" });
@@ -451,14 +936,15 @@
     }
     function go(i) { location.hash = "#/" + u + "/read/" + i; }
 
-    // swipe to change page (ignored while pinch-zooming)
+    // swipe to change page (ignored while pinch-zooming or selecting text)
     var sx = null, sy = null, multi = false;
     stage.addEventListener("touchstart", function (e) {
       multi = e.touches.length > 1;
       if (!multi) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }
     }, { passive: true });
     stage.addEventListener("touchend", function (e) {
-      if (multi || sx === null || (window.visualViewport && window.visualViewport.scale > 1.05)) { sx = null; return; }
+      var sel = window.getSelection();
+      if (multi || sx === null || (window.visualViewport && window.visualViewport.scale > 1.05) || (sel && !sel.isCollapsed)) { sx = null; return; }
       var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
       sx = null;
       if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.5) {
@@ -752,13 +1238,19 @@
   var keyHandler = null;
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && !sheet.hidden) { closeInfo(); return; }
+    if (e.key === "Escape" && selCur) { hideSelBar(); return; }
     if (e.metaKey || e.ctrlKey || e.altKey) return;
+    // never steal keys while typing in a note
+    if (e.target && e.target.closest && e.target.closest("input, textarea, [contenteditable]")) return;
     if (e.key.toLowerCase() === "l" && sheet.hidden) { toggleLang(); return; }
     if (keyHandler) keyHandler(e);
   });
 
   function render(keepScroll) {
     keyHandler = null;
+    flushEditors(); editorFlushes = [];
+    hideSelBar();
+    document.body.classList.remove("has-drawer");
     var parts = (location.hash.replace(/^#\/?/, "") || "").split("/").filter(Boolean);
     var u = parts[0], key = parts[1], n = parts[2];
     var y = window.scrollY;
@@ -766,6 +1258,7 @@
     if (!u || !DATA[u]) viewHome();
     else if (key === "doc" && DOCS[u]) viewDoc(u, n === "es" ? "es" : "en");
     else if (key === "read" && DOCS[u]) viewReader(u, parseInt(n, 10) || 1);
+    else if (key === "notes") viewNotes(u, parseInt(n, 10) || 1);
     else if (!key || !LEVELS.some(function (L) { return L.key === key; })) viewUnit(u);
     else if (n === "results") viewResults(u, key);
     else {

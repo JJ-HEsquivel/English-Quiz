@@ -33,6 +33,18 @@ CONTENIDO
       o con las flechas del teclado (tecla T = traducir la página).
     * Documento en inglés: el original completo + botón para descargar el PDF.
     * Documento en español: la traducción completa + botón para descargar el PDF.
+- SUBRAYADO (lector dinámico y documento en inglés):
+    * Selecciona texto EN INGLÉS: aparece una barra para subrayar (3 colores), copiar o
+      enviarlo al Apunte 1 o 2. Las páginas en español no se pueden subrayar.
+    * Toca un subrayado para quitarlo, o usa "Quitar subrayados de esta página".
+    * En el Documento en español puedes seleccionar y copiar el texto (o enviarlo a tus apuntes).
+- MIS APUNTES: cada unidad tiene 2 apuntes (en la pantalla de la unidad). Puedes escribir,
+  pegar y borrar lo que quieras; se guarda solo mientras escribes. Mientras lees, el botón
+  "Mis apuntes" abre un panel al costado. En la página del apunte está la lista de
+  "Mis subrayados" (con botón para quitar cada uno) y la "Copia de seguridad".
+- Apuntes y subrayados se guardan en el navegador de ese dispositivo (no se borran al cerrar).
+  Solo se pierden si borras los datos del navegador: usa "Descargar copia" para respaldarlos
+  o pasarlos a otro dispositivo con "Restaurar una copia".
 - El progreso se guarda en el navegador de ese dispositivo.
 - En computadora: teclas A-D o 1-4 para responder, T/F para verdadero/falso,
   flechas para moverte, i para ver la información.
@@ -40,6 +52,8 @@ CONTENIDO
 CARPETA docs/
    docs/u1, docs/u2, docs/u4: en/ y es/ = páginas del lector dinámico (misma página en
    los dos idiomas), full-es/ = documento completo en español, y los PDF para descargar.
+   js/data/text.js = texto de cada página de los PDF (para seleccionar/subrayar). Las imágenes
+   en/ se generaron desde los PDF en inglés, por eso el texto coincide con la imagen.
 
 PARA EDITAR PREGUNTAS
    js/data/unit1.js, unit2.js, unit4.js

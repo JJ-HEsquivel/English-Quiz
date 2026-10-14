@@ -52,7 +52,7 @@
       docEs: "Spanish document", docEsDesc: "The complete translation into Spanish.",
       reader: "Interactive reader", readerDesc: "Same format as the PDF, in English. Highlight the text, send it to your notes and translate only the page you are reading.",
       pages: "pages", download: "Download PDF", pageOf: function (a, b) { return "Page " + a + " of " + b; },
-      toEs: "Translate this page to Spanish", toEn: "Back to English",
+      toEs: "Translate this page to Spanish", toEn: "Back to English", toEsShort: "Translate", toEnShort: "English",
       showingEn: "English", showingEs: "Spanish (this page only)",
       swipeHint: "Swipe or use ← → to change page. Pinch to zoom.",
       openFull: "Open full image", loading: "Loading…",
@@ -112,7 +112,7 @@
       docEs: "Documento en español", docEsDesc: "La traducción completa al español.",
       reader: "Lector dinámico", readerDesc: "Mismo formato que el PDF, en inglés. Subraya el texto, envíalo a tus apuntes y traduce solo la página que estás leyendo.",
       pages: "páginas", download: "Descargar PDF", pageOf: function (a, b) { return "Página " + a + " de " + b; },
-      toEs: "Cambiar esta página al español", toEn: "Volver al inglés",
+      toEs: "Cambiar esta página al español", toEn: "Volver al inglés", toEsShort: "Traducir", toEnShort: "Inglés",
       showingEn: "Inglés", showingEs: "Español (solo esta página)",
       swipeHint: "Desliza o usa ← → para cambiar de página. Pellizca para hacer zoom.",
       openFull: "Abrir imagen completa", loading: "Cargando…",
@@ -888,8 +888,12 @@
     // preload the other language of this page and the next page, so switching is instant
     [src(showEs ? "en" : "es", p), p < n ? src("en", p + 1) : null].forEach(function (s) { if (s) { var im = new Image(); im.src = s; } });
 
-    var toggle = h("button", { class: "btn btn--primary reader__toggle", type: "button", onclick: function () { flip(); } },
-      h("span", { class: "btn-ico", html: ICONS.swap }), showEs ? T("toEn") : T("toEs"));
+    // lives in the sticky top bar, so it is always at hand while scrolling the page
+    var toggle = h("button", { class: "reader__toggle" + (showEs ? " is-es" : ""), type: "button",
+      title: showEs ? T("toEn") : T("toEs"), "aria-label": showEs ? T("toEn") : T("toEs"), onclick: function () { flip(); } },
+      h("span", { class: "btn-ico", html: ICONS.swap }),
+      h("span", { class: "reader__toggle-long", text: showEs ? T("toEnShort") : T("toEsShort") }),
+      h("span", { class: "reader__toggle-short", text: showEs ? "EN" : "ES" }));
 
     var strip = h("nav", { class: "nav-strip", "aria-label": T("pages") },
       Array.apply(null, Array(n)).map(function (_, i) {
@@ -915,10 +919,10 @@
             onclick: function () { if (confirm(T("confirmPageHl"))) { setHl(u, p, []); render(true); } } }, T("clearPageHl")));
 
     app.replaceChildren(
-      topbar({ back: "#/" + u, kicker: T("unit") + " " + unit.number + " · " + T("reader"), title: T("pageOf")(p, n), home: true }),
+      topbar({ back: "#/" + u, kicker: T("unit") + " " + unit.number + " · " + T("reader"), title: T("pageOf")(p, n), home: true, right: toggle }),
       h("main", { class: "wrap wrap--doc", style: "--c:" + unit.color },
         strip,
-        h("div", { class: "reader__bar" }, toggle,
+        h("div", { class: "reader__bar" },
           notesButton(u),
           h("a", { class: "btn", href: (showEs ? src("es", p) : src("en", p)), target: "_blank", rel: "noopener", text: T("openFull") })),
         hint,

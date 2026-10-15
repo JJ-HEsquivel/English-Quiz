@@ -612,7 +612,7 @@
 
   /* ---------- Text layer over the page images (select, copy, highlight) ---------- */
   var TEXT = window.QUIZ_TEXT || {};
-  var HL_COLORS = ["y", "g", "p"];
+  var HL_COLORS = ["y", "g", "b", "p"];
   function pageData(u, l) { return TEXT[u] && TEXT[u][l]; }
   function pageImg(u, l, attrs) {
     var d = pageData(u, l);
@@ -776,8 +776,17 @@
   }
   function addHl(info, c) {
     var tl = info.layer._tl;
-    // a new highlight replaces the ones it overlaps
-    var list = hlOf(tl.u, tl.p).filter(function (x) { return cmpPos(x.e, info.s) <= 0 || cmpPos(x.s, info.e) >= 0; });
+    // the new highlight goes on top: the parts of older highlights outside it are kept
+    var list = [];
+    hlOf(tl.u, tl.p).forEach(function (x) {
+      if (cmpPos(x.e, info.s) <= 0 || cmpPos(x.s, info.e) >= 0) { list.push(x); return; }
+      if (cmpPos(x.s, info.s) < 0) keepPart(x, x.s, info.s, "a");
+      if (cmpPos(x.e, info.e) > 0) keepPart(x, info.e, x.e, "b");
+    });
+    function keepPart(x, a, b, tag) {
+      var t = textBetween(tl, a, b).trim();
+      if (t) list.push({ id: x.id + tag, s: a, e: b, c: x.c, t: t });
+    }
     list.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), s: info.s, e: info.e, c: c, t: info.text });
     list.sort(function (x, y) { return cmpPos(x.s, y.s); });
     setHl(tl.u, tl.p, list);

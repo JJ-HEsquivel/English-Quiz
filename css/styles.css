@@ -424,6 +424,7 @@ a { color: inherit; }
 }
 .hl--y { --hl: rgba(255, 214, 0, .45); --hlu: #e0a800; }
 .hl--g { --hl: rgba(70, 215, 120, .38); --hlu: #1f9e52; }
+.hl--b { --hl: rgba(80, 160, 255, .38); --hlu: #2f6fed; }
 .hl--p { --hl: rgba(255, 110, 170, .35); --hlu: #d63c7c; }
 .sel-hint { font-size: 13px; color: var(--ink-2); margin: 0 0 10px; }
 .sel-hint a { color: var(--c, var(--accent)); font-weight: 650; }

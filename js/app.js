@@ -629,13 +629,28 @@
     if (!items || !items.length) return wrap;
     var layer = h("div", { class: "tl" + (canHl ? " tl--hl" : ""), lang: l });
     layer._tl = { u: u, l: l, p: p, items: items, r: data.r, canHl: canHl };
+    var r = data.r;
     items.forEach(function (it, i) {
       layer.appendChild(h("span", { "data-i": String(i),
-        style: "left:" + (it[0] * 100).toFixed(2) + "%;top:" + (it[1] * 100).toFixed(2) + "%;font-size:" + (it[2] * 100).toFixed(3) + "cqw" }, it[4]));
+        style: "left:" + (it[0] * 100).toFixed(2) + "%;top:" + (it[1] * 100).toFixed(2) + "%;font-size:" + (it[2] * 100).toFixed(3) + "cqw" +
+          ";padding-bottom:" + (gapBelow(items, i, r) * r * 100).toFixed(3) + "cqw" }, it[4]));
     });
     wrap.appendChild(layer);
     if (canHl) paintHl(layer);
     return wrap;
+  }
+  // Empty space (fraction of page height) between a text line and the line right below it.
+  // The span is padded down to that line, so dragging between lines never falls on "nothing"
+  // (which made the browser selection jump around).
+  function gapBelow(items, i, r) {
+    var it = items[i], hgt = it[2] / r, bottom = it[1] + hgt, best = hgt * 1.2;
+    for (var j = 0; j < items.length; j++) {
+      var o = items[j];
+      if (o[1] <= it[1] + hgt * 0.5) continue;                       // not below
+      if (o[0] >= it[0] + it[3] || o[0] + o[3] <= it[0]) continue;     // no horizontal overlap
+      best = Math.min(best, o[1] - bottom);
+    }
+    return Math.max(0, best);
   }
   // stretch each word horizontally so it covers the same width as in the image
   function fitLayers() {

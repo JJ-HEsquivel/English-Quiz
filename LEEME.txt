@@ -38,6 +38,13 @@ CONTENIDO
       enviarlo al Apunte 1 o 2. Las páginas en español no se pueden subrayar.
     * Toca un subrayado para quitarlo, o usa "Quitar subrayados de esta página".
     * En el Documento en español puedes seleccionar y copiar el texto (o enviarlo a tus apuntes).
+- EXAMEN DE PRÁCTICA (en cada unidad, debajo de los 3 niveles): 55 preguntas con el mismo
+  formato y dificultad que el examen real de Inglés III (13/08/2026): Parte 1 relacionar (1-10),
+  Parte 2 cuadros de palabras (11-20), Parte 3 opción múltiple (21-40) y Parte 4 lectura con
+  verdadero/falso (41-45) y completar (46-55). Al final "Calificar mi examen" muestra la nota y
+  las respuestas correctas. Las preguntas que estuvieron en el examen real tienen la marca
+  📌 "Examen real · P<número>" y hay una casilla para ver solo esas.
+  Las preguntas están en js/data/exams.js ("real" = número de la pregunta en el examen real).
 - MIS APUNTES: cada unidad tiene 2 apuntes (en la pantalla de la unidad). Puedes escribir,
   pegar y borrar lo que quieras; se guarda solo mientras escribes. Mientras lees, el botón
   "Mis apuntes" abre un panel al costado. En la página del apunte está la lista de

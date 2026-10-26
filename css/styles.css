@@ -523,3 +523,89 @@ a { color: inherit; }
   }
   body.has-drawer .wrap--doc { padding-bottom: calc(48vh + 20px); }
 }
+
+/* ---------- Practice exam ---------- */
+.exam-card .real-note, .real-note { font-size: 13px; font-weight: 650; color: #b7791f; }
+.exam .card { margin-top: 16px; }
+.xsum__legend { font-size: 13px; color: var(--ink-2); margin: 12px 0 0; }
+.xsum__parts { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-top: 12px; }
+.xsum__part { background: var(--surface-2); border-radius: 12px; padding: 10px 12px; }
+.xsum__part small { display: block; font-size: 12px; color: var(--ink-2); }
+.xsum__part strong { font-size: 20px; font-variant-numeric: tabular-nums; }
+.xfilter {
+  display: flex; align-items: center; gap: 8px; margin-top: 14px;
+  padding: 10px 12px; border-radius: 12px; cursor: pointer;
+  background: color-mix(in srgb, #f6ad19 14%, var(--surface)); border: 1px solid color-mix(in srgb, #f6ad19 45%, var(--line));
+  font-size: 14px; font-weight: 650;
+}
+.xfilter input { width: 18px; height: 18px; accent-color: var(--c); }
+.xsec__t { font-size: 19px; }
+.xsec__i { font-size: 14px; font-weight: 650; color: var(--ink-2); margin: 6px 0 12px; }
+.xsub { font-size: 16px; margin: 22px 0 0; }
+
+.xq { display: flex; gap: 10px; padding: 10px 8px; border-radius: 12px; border: 1px solid transparent; }
+.xq + .xq { margin-top: 4px; }
+.xq__n { flex: none; min-width: 28px; font-weight: 750; color: var(--c); font-variant-numeric: tabular-nums; padding-top: 2px; }
+.xq__body { flex: 1; min-width: 0; }
+.xq.is-real { background: color-mix(in srgb, #f6ad19 9%, transparent); border-color: color-mix(in srgb, #f6ad19 40%, transparent); }
+.xq.is-ok { background: var(--ok-bg); border-color: var(--ok); }
+.xq.is-bad { background: var(--bad-bg); border-color: var(--bad); }
+.xq__fix { margin-top: 6px; font-size: 14px; font-weight: 650; color: var(--ok); }
+.real-badge {
+  display: inline-block; margin-bottom: 6px;
+  font-size: 12px; font-weight: 750; letter-spacing: .02em;
+  padding: 3px 9px; border-radius: 999px;
+  background: #f6ad19; color: #2b1d00;
+}
+
+.xmatch { display: grid; gap: 16px; }
+@media (min-width: 760px) { .xmatch { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); align-items: start; } }
+.xmatch__col h4 { margin: 0 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-2); }
+.xrow { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.xterm { font-weight: 650; }
+.xdef { font-size: 15px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.xdef b { color: var(--c); }
+.xsel {
+  font: inherit; font-size: 15px; font-weight: 650; color: var(--ink);
+  background: var(--surface); border: 1.5px solid var(--line); border-radius: 10px;
+  padding: 6px 8px; min-height: 38px; max-width: 100%; margin: 0 4px; vertical-align: middle;
+}
+.xsel:focus { outline: 2px solid var(--c); outline-offset: 1px; }
+.xsel:disabled { opacity: 1; }
+.xgap { margin: 0; line-height: 1.85; }
+.xgap .xsel { min-height: 32px; padding: 3px 6px; margin: 1px 4px; }
+.xfill + .xfill { margin-top: 18px; }
+.xbox {
+  display: flex; flex-wrap: wrap; gap: 6px 14px;
+  padding: 10px 12px; margin: 4px 0 10px;
+  border: 1.5px solid var(--ink-2); border-radius: 10px; font-size: 15px;
+}
+.xbox__w b { color: var(--c); }
+
+.xmc__q { margin: 0 0 8px; font-weight: 650; }
+.xmc__note { margin: -4px 0 8px; font-size: 13px; color: var(--ink-2); font-style: italic; }
+.xmc__o { display: grid; gap: 6px; }
+@media (min-width: 760px) { .xmc__o { grid-template-columns: 1fr 1fr; } }
+.xopt {
+  text-align: left; border: 1.5px solid var(--line); background: var(--surface);
+  border-radius: 10px; padding: 8px 12px; min-height: 42px; font-size: 15px;
+}
+.xopt:hover:not(:disabled) { border-color: var(--c); }
+.xopt:disabled { cursor: default; }
+.xopt b { color: var(--c); }
+.xopt.is-sel { border-color: var(--sel); background: var(--sel-bg); }
+.xopt.is-key { border-color: var(--ok); box-shadow: inset 0 0 0 1px var(--ok); }
+.xtf { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.xtf__s { margin: 0; flex: 1 1 260px; }
+.xtf__b { display: flex; gap: 6px; }
+.xopt--tf { min-width: 52px; text-align: center; font-weight: 750; }
+.xread {
+  background: var(--surface-2); border-radius: 12px; padding: 14px 16px;
+  font-size: 15.5px; line-height: 1.6;
+}
+.xread h3 { font-size: 16px; margin-bottom: 6px; letter-spacing: .02em; }
+.xread p { margin: 8px 0 0; text-align: justify; }
+.xfoot { margin-top: 18px; }
+
+/* "only real exam questions" filter */
+.only-real .xsec:not(.has-real), .only-real .xfill:not(.has-real), .only-real .xq:not(.is-real) { display: none; }

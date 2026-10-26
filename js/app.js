@@ -70,6 +70,18 @@
       selHintEs: "Select text to copy it or send it to your notes.",
       esCopyHint: "This Spanish page is only an image. To copy text in Spanish, open the Spanish document.",
       goPage: "Go to page",
+      exam: "Practice exam", examKicker: function (n) { return "Like the real exam · " + n + " questions"; },
+      examDesc: "Same format and difficulty as the real exam: matching, word boxes, multiple choice and reading.",
+      examReal: function (n) { return n + " question" + (n === 1 ? "" : "s") + " from the real exam"; },
+      realQ: function (n) { return "Real exam · Q" + n; }, realBadge: "This question was on the real exam",
+      realLegend: "= this question was on the real exam (Inglés III, 13/08/2026).",
+      onlyReal: function (n) { return "Show only the " + n + " questions from the real exam"; },
+      examIntro: "Answer everything, then tap \u201cGrade my exam\u201d at the end to see your score and the correct answers.",
+      answeredOf: function (a, b) { return a + " of " + b + " answered"; },
+      p1: "Part 1 · Matching", p2: "Part 2 · Word box", p3: "Part 3 · Multiple choice", p4: "Part 4 · Reading comprehension",
+      grade: "Grade my exam", retry: "Try again", examScore: "Your score", correctIs: "Correct answer: ",
+      gradeLeft: function (n) { return "You still have " + n + " unanswered question" + (n === 1 ? "" : "s") + ". Grade anyway?"; },
+      confirmRetry: "Erase your answers and start this exam again?",
       backup: "Backup copy", backupDesc: "Your notes and highlights stay in this browser. Download a copy to keep them safe or to move them to another device.",
       exportB: "Download copy", importB: "Restore a copy", importOk: "Copy restored",
       importBad: "That file is not a valid copy.", confirmImport: "Replace your current notes and highlights with this copy?"
@@ -130,6 +142,18 @@
       selHintEs: "Selecciona texto para copiarlo o enviarlo a tus apuntes.",
       esCopyHint: "Esta página en español es solo imagen. Para copiar texto en español, abre el Documento en español.",
       goPage: "Ir a la página",
+      exam: "Examen de práctica", examKicker: function (n) { return "Como el examen real · " + n + " preguntas"; },
+      examDesc: "Mismo formato y dificultad que el examen real: relacionar, cuadros de palabras, opción múltiple y lectura.",
+      examReal: function (n) { return n + " pregunta" + (n === 1 ? "" : "s") + " del examen real"; },
+      realQ: function (n) { return "Examen real · P" + n; }, realBadge: "Esta pregunta estuvo en el examen real",
+      realLegend: "= esta pregunta estuvo en el examen real (Inglés III, 13/08/2026).",
+      onlyReal: function (n) { return "Mostrar solo las " + n + " preguntas del examen real"; },
+      examIntro: "Responde todo y al final toca \u201cCalificar mi examen\u201d para ver tu nota y las respuestas correctas.",
+      answeredOf: function (a, b) { return a + " de " + b + " respondidas"; },
+      p1: "Parte 1 · Relacionar", p2: "Parte 2 · Cuadro de palabras", p3: "Parte 3 · Opción múltiple", p4: "Parte 4 · Comprensión lectora",
+      grade: "Calificar mi examen", retry: "Intentar de nuevo", examScore: "Tu nota", correctIs: "Respuesta correcta: ",
+      gradeLeft: function (n) { return "Te falta" + (n === 1 ? "" : "n") + " " + n + " pregunta" + (n === 1 ? "" : "s") + " por responder. ¿Calificar de todos modos?"; },
+      confirmRetry: "¿Borrar tus respuestas y empezar este examen de nuevo?",
       backup: "Copia de seguridad", backupDesc: "Tus apuntes y subrayados quedan guardados en este navegador. Descarga una copia para tenerlos seguros o pasarlos a otro dispositivo.",
       exportB: "Descargar copia", importB: "Restaurar una copia", importOk: "Copia restaurada",
       importBad: "Ese archivo no es una copia válida.", confirmImport: "¿Reemplazar tus apuntes y subrayados actuales por esta copia?"
@@ -185,6 +209,7 @@
     note: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>',
     x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
     expand: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg>',
+    exam: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 11l2 2 4-4M9 17h6"/></svg>',
     mark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M7 16l2-6 7-7 3 3-7 7z"/></svg>'
   };
 
@@ -281,12 +306,12 @@
       else if (k.slice(0, 2) === "on") el.addEventListener(k.slice(2), v);
       else el.setAttribute(k, v === true ? "" : v);
     }
-    for (var i = 2; i < arguments.length; i++) {
-      var c = arguments[i];
-      if (c === null || c === undefined || c === false) continue;
-      if (Array.isArray(c)) c.forEach(function (x) { if (x) el.appendChild(typeof x === "string" ? document.createTextNode(x) : x); });
+    function add(c) {
+      if (c === null || c === undefined || c === false) return;
+      if (Array.isArray(c)) c.forEach(add); // nested lists are fine
       else el.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
     }
+    for (var i = 2; i < arguments.length; i++) add(arguments[i]);
     return el;
   }
   function bar(pct, color) {
@@ -424,7 +449,7 @@
         h("section", { class: "unit-head" },
           h("h1", { text: T("unit") + " " + unit.number + " — " + uTitle(u) }),
           h("p", { class: "muted", text: T("chooseLevel") })),
-        h("section", { class: "levels" }, cards),
+        h("section", { class: "levels" }, cards, EXAMS[u] ? examCard(u) : null),
         notesSection(u),
         docsSection(u)));
   }
@@ -1251,6 +1276,201 @@
     render();
   }
 
+  /* ---------- Practice exam (same format as the real exam) ---------- */
+  var EXAMS = window.QUIZ_EXAMS || {};
+  var examOnlyReal = false;
+  // flat list of every question: id, number (1-55), part (0-3), answer key, real-exam number
+  function examItems(u) {
+    var ex = EXAMS[u], out = [], n = 0;
+    ex.match.a.forEach(function (it, i) { out.push({ id: "m" + i, n: ++n, sec: 0, k: it.k, real: it.real }); });
+    ex.fill.forEach(function (bx, b) {
+      bx.items.forEach(function (it, i) { out.push({ id: "f" + b + "_" + i, n: ++n, sec: 1, k: it.k, real: it.real }); });
+    });
+    ex.mc.forEach(function (it, i) { out.push({ id: "c" + i, n: ++n, sec: 2, k: it.k, real: it.real }); });
+    ex.reading.tf.forEach(function (it, i) { out.push({ id: "t" + i, n: ++n, sec: 3, k: it.k }); });
+    ex.reading.gaps.forEach(function (it, i) { out.push({ id: "g" + i, n: ++n, sec: 3, k: it.k }); });
+    return out;
+  }
+  function examState(u) {
+    progress[u] = progress[u] || {};
+    if (!progress[u].exam) progress[u].exam = { a: {}, g: false };
+    return progress[u].exam;
+  }
+  function examScore(u) {
+    var st = examState(u), r = { c: 0, total: 0, answered: 0, by: [0, 0, 0, 0], tot: [0, 0, 0, 0] };
+    examItems(u).forEach(function (it) {
+      r.total++; r.tot[it.sec]++;
+      if (st.a[it.id] !== undefined) r.answered++;
+      if (st.a[it.id] === it.k) { r.c++; r.by[it.sec]++; }
+    });
+    return r;
+  }
+  function examCard(u) {
+    var unit = DATA[u], s = examScore(u), st = examState(u);
+    var nReal = examItems(u).filter(function (x) { return x.real; }).length;
+    return h("a", { class: "level-card exam-card", href: "#/" + u + "/exam", style: "--c:" + unit.color },
+      h("div", { class: "level-card__icon", html: ICONS.exam }),
+      h("div", { class: "level-card__body" },
+        h("small", { text: T("examKicker")(s.total) }),
+        h("h3", { text: T("exam") }),
+        h("div", { class: "muted", style: "font-size:14px", text: T("examDesc") }),
+        nReal ? h("div", { class: "real-note", text: "📌 " + T("examReal")(nReal) }) : null,
+        h("div", { class: "bar-row" }, bar(s.answered / s.total, unit.color),
+          h("span", { text: st.g ? T("examScore") + ": " + s.c + "/" + s.total : s.answered + "/" + s.total }))),
+      h("span", { class: "chev", html: ICONS.chev }));
+  }
+
+  function viewExam(u) {
+    var unit = DATA[u], ex = EXAMS[u], st = examState(u), graded = st.g;
+    var items = examItems(u), byId = {};
+    items.forEach(function (it) { byId[it.id] = it; });
+    var nReal = items.filter(function (x) { return x.real; }).length;
+    var s = examScore(u);
+
+    function setA(id, v) {
+      if (graded) return;
+      if (v === undefined || v === "") delete st.a[id]; else st.a[id] = v;
+      save(); render(true);
+    }
+    // one numbered question; fix = correct answer, shown after grading when the answer was wrong
+    function item(id, body, fix) {
+      var it = byId[id], a = st.a[id], cls = "xq" + (it.real ? " is-real" : "");
+      if (graded) cls += a === it.k ? " is-ok" : " is-bad";
+      return h("div", { class: cls },
+        h("div", { class: "xq__n", text: it.n + "." }),
+        h("div", { class: "xq__body" },
+          it.real ? h("span", { class: "real-badge", title: T("realBadge") }, "📌 " + T("realQ")(it.real)) : null,
+          body,
+          graded && a !== it.k ? h("div", { class: "xq__fix", text: T("correctIs") + fix }) : null));
+    }
+    function pick(id, map, short) {
+      var a = st.a[id];
+      return h("select", { class: "xsel", disabled: graded, "aria-label": T("question") + " " + byId[id].n,
+        onchange: function (e) { setA(id, e.target.value); } },
+        h("option", { value: "" }, "—"),
+        Object.keys(map).map(function (L) {
+          return h("option", { value: L, selected: a === L ? "selected" : null }, short ? L : L + " · " + map[L]);
+        }));
+    }
+    // sentence whose gap "_____" is replaced by a dropdown
+    function gapLine(q, sel) {
+      var parts = q.split("_____");
+      return h("p", { class: "xgap" }, parts[0], sel, parts.slice(1).join("_____"));
+    }
+    function wordBox(map) {
+      return h("div", { class: "xbox" }, Object.keys(map).map(function (L) {
+        return h("span", { class: "xbox__w" }, h("b", { text: L + "." }), " " + map[L]);
+      }));
+    }
+    function section(title, instr, hasReal, kids) {
+      return h("section", { class: "card xsec" + (hasReal ? " has-real" : "") },
+        h("h2", { class: "xsec__t", text: title }),
+        h("p", { class: "xsec__i", text: instr }),
+        kids);
+    }
+    function anyReal(list) { return list.some(function (x) { return x.real; }); }
+
+    // Part 1 · Matching
+    var p1 = section(T("p1"), "Match the term in Column A with its correct definition in Column B.", anyReal(ex.match.a), [
+      h("div", { class: "xmatch" },
+        h("div", { class: "xmatch__col" },
+          h("h4", { text: "Column A" }),
+          ex.match.a.map(function (m, i) {
+            return item("m" + i, h("div", { class: "xrow" }, h("span", { class: "xterm", text: m.t }), pick("m" + i, ex.match.b, true)),
+              m.k + " · " + ex.match.b[m.k]);
+          })),
+        h("div", { class: "xmatch__col" },
+          h("h4", { text: "Column B" }),
+          Object.keys(ex.match.b).map(function (L) {
+            return h("div", { class: "xdef" }, h("b", { text: L + "." }), " " + ex.match.b[L]);
+          })))]);
+
+    // Part 2 · Word boxes
+    var p2 = section(T("p2"), "Complete each sentence with the correct option from the box.",
+      ex.fill.some(function (bx) { return anyReal(bx.items); }),
+      ex.fill.map(function (bx, b) {
+        return h("div", { class: "xfill" + (anyReal(bx.items) ? " has-real" : "") },
+          wordBox(bx.box),
+          bx.items.map(function (it, i) {
+            var id = "f" + b + "_" + i;
+            return item(id, gapLine(it.q, pick(id, bx.box)), it.k + " · " + bx.box[it.k]);
+          }));
+      }));
+
+    // Part 3 · Multiple choice
+    var p3 = section(T("p3"), "Choose the best answer for each question.", anyReal(ex.mc),
+      ex.mc.map(function (q, i) {
+        var id = "c" + i, a = st.a[id];
+        return item(id, h("div", null,
+          h("p", { class: "xmc__q", text: q.q }),
+          q.note ? h("p", { class: "xmc__note", text: q.note }) : null,
+          h("div", { class: "xmc__o" }, q.o.map(function (o, oi) {
+            var cls = "xopt" + (a === oi ? " is-sel" : "") + (graded && oi === q.k ? " is-key" : "");
+            return h("button", { class: cls, type: "button", disabled: graded, onclick: function () { setA(id, a === oi ? undefined : oi); } },
+              h("b", { text: "ABCD".charAt(oi) + ")" }), " " + o);
+          }))), "ABCD".charAt(q.k) + ") " + q.o[q.k]);
+      }));
+
+    // Part 4 · Reading comprehension
+    var R = ex.reading;
+    var p4 = section(T("p4"), "Read the text, then answer the questions.", false, [
+      h("article", { class: "xread" }, h("h3", { text: R.title }), R.text.map(function (t) { return h("p", { text: t }); })),
+      h("h3", { class: "xsub", text: "Section 1: True or False" }),
+      h("p", { class: "xsec__i", text: "Read the following statements and decide if they are True (T) or False (F) based on the text." }),
+      R.tf.map(function (q, i) {
+        var id = "t" + i, a = st.a[id];
+        return item(id, h("div", { class: "xtf" },
+          h("p", { class: "xtf__s", text: q.s }),
+          h("div", { class: "xtf__b" }, [true, false].map(function (v) {
+            return h("button", { class: "xopt xopt--tf" + (a === v ? " is-sel" : "") + (graded && v === q.k ? " is-key" : ""), type: "button", disabled: graded,
+              onclick: function () { setA(id, a === v ? undefined : v); } }, v ? "T" : "F");
+          }))), q.k ? "T (True)" : "F (False)");
+      }),
+      h("h3", { class: "xsub", text: "Section 2: Complete the sentences" }),
+      h("p", { class: "xsec__i", text: "Choose the correct word from the box to complete each sentence." }),
+      wordBox(R.words),
+      R.gaps.map(function (q, i) {
+        var id = "g" + i;
+        return item(id, gapLine(q.q, pick(id, R.words)), q.k + " · " + R.words[q.k]);
+      })]);
+
+    var secNames = [T("p1"), T("p2"), T("p3"), T("p4")];
+    var summary = h("section", { class: "card xsum" },
+      graded
+        ? h("div", null,
+            h("div", { class: "muted", text: T("examScore") }),
+            h("div", { class: "summary__big", text: s.c + " / " + s.total }),
+            h("div", { class: "xsum__parts" }, secNames.map(function (nm, i) {
+              return h("div", { class: "xsum__part" }, h("small", { text: nm }), h("strong", { text: s.by[i] + "/" + s.tot[i] }));
+            })))
+        : h("div", null,
+            h("p", { style: "margin:0", text: T("examIntro") }),
+            h("div", { class: "bar-row", style: "margin-top:10px" }, bar(s.answered / s.total, unit.color),
+              h("span", { text: T("answeredOf")(s.answered, s.total) }))),
+      nReal ? h("label", { class: "xfilter" },
+        h("input", { type: "checkbox", checked: examOnlyReal ? "checked" : null, onchange: function (e) { examOnlyReal = e.target.checked; render(true); } }),
+        " 📌 " + T("onlyReal")(nReal)) : null,
+      h("p", { class: "xsum__legend", text: "📌 " + T("realLegend") }));
+
+    var foot = graded
+      ? h("button", { class: "btn btn--block", type: "button", onclick: function () {
+          if (!confirm(T("confirmRetry"))) return;
+          progress[u].exam = { a: {}, g: false }; save(); render();
+        } }, T("retry"))
+      : h("button", { class: "btn btn--primary btn--block", type: "button", onclick: function () {
+          var left = s.total - s.answered;
+          if (left && !confirm(T("gradeLeft")(left))) return;
+          st.g = true; save(); render();
+        } }, T("grade"));
+
+    app.replaceChildren(
+      topbar({ back: "#/" + u, kicker: T("unit") + " " + unit.number + " · " + uTitle(u), title: T("exam"), home: true,
+        right: h("span", { class: "score-pill", text: graded ? "✓ " + s.c + "/" + s.total : s.answered + "/" + s.total }) }),
+      h("main", { class: "wrap exam" + (examOnlyReal ? " only-real" : ""), style: "--c:" + unit.color },
+        summary, p1, p2, p3, p4,
+        h("div", { class: "xfoot" }, foot)));
+  }
+
   /* ---------- Toast ---------- */
   var toastEl = null, toastT = null;
   function toast(text) {
@@ -1287,6 +1507,7 @@
     else if (key === "doc" && DOCS[u]) viewDoc(u, n === "es" ? "es" : "en");
     else if (key === "read" && DOCS[u]) viewReader(u, parseInt(n, 10) || 1);
     else if (key === "notes") viewNotes(u, parseInt(n, 10) || 1);
+    else if (key === "exam" && EXAMS[u]) viewExam(u);
     else if (!key || !LEVELS.some(function (L) { return L.key === key; })) viewUnit(u);
     else if (n === "results") viewResults(u, key);
     else {
